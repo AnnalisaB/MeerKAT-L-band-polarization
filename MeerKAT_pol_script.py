@@ -16,7 +16,7 @@ it can be done in flocs as ephem is not imported correctly in casa
 
 import numpy as np
 import os
-import cal_J0408
+#import cal_J0408
 
 target='PSZ2G313.33'
 
@@ -51,6 +51,9 @@ split_xcal=True
 apply_target=True
 
 ###### END OF INPUTS (unless you want to change the name ofthe gain tables - see below) ######
+
+if 'J0408-6545' in fcal:
+    import cal_J0408 
 
 # Name your gain tables
 gtab_p     = "CASA_Tables/calib.gcal_p"
