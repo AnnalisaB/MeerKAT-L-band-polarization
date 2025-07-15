@@ -146,7 +146,7 @@ if model_xcal ==True:
       #  sys.exit()
 
 # initial flags on the data
-os.sytem(f"tricolour -fs total_power -dc DATA -c {tricolour_strategy}")
+os.sytem(f"tricolour -f {' '.join(fcal_id)} -fs total_power -dc DATA -c {tricolour_strategy}")
 
 # Delay calibration  - residual, most taken out at the obs - few nsec typical 
 gaincal(vis = calms, caltable = ktab, selectdata = True,\
@@ -176,7 +176,7 @@ for ii in range(np.size(bpcal)):
                  gaintable = [ktab,gtab_p,gtab_a], gainfield = ['',bpcal[ii],bpcal[ii]],\
                  interp = ['','',''], parang = False,append=append)
 
-    # plotms(vis=btab, field=bpcal_id,xaxis='chan',yaxis='amp',antenna='',iteraxis='antenna',coloraxis='corr')
+# plotms(vis=btab, field=bpcal_id,xaxis='chan',yaxis='amp',antenna='',iteraxis='antenna',coloraxis='corr')
 
 # undo the flags
 
