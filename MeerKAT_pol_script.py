@@ -5,10 +5,9 @@
 '''
 before running this script, all the fields must have X and Y flipped using the script "correct_parang.py" by B Hugo
 https://github.com/bennahugo/LunaticPolarimetry/blob/master/correct_parang.py
-python correct_parang.py -f f --noparang --applyantidiag <MSfile>
+python correct_parang.py -f <field> --noparang --applyantidiag <MSfile>
+the correct_parang.py script must be run on each field separately
 the script writes the output in the CORRECTED_DATA column, so the corrected data needs to be split after the correction
-
-before running this script, the MS must be split in a target and a calibration MS
 
 plots are done with shadems https://github.com/ratt-ru/shadeMS
 
@@ -30,10 +29,9 @@ ref_ant = 'm002'
 gtab_p     = "CASA_Tables/calib.gcal_p"
 ktab     = "CASA_Tables/calib.kcal"
 gtab_a = "CASA_Tables/calib.gcal_a"
-gtab_pol = "CASA_Tables/calib.gcal_1"
 btab     = "CASA_Tables/calib.bandpass"
 ftab     = "CASA_Tables/calib.fluxscale"
-gtab_sec_p = "CASA_Tables/calib.sec.p"
+gtab_sec_p = "CASA_Tables/calib.sec_p"
 Ttab_sec ="CASA_Tables/calib.T"
 gtab_pol_p= "CASA_Tables/calib.gcal_pol_p"
 
@@ -140,7 +138,7 @@ if model_xcal ==True:
               )
 
         #plots to check
-        #pplotms(vis=calms,field=xcal,correlation='XX,YY', timerange='',antenna='2&3', xaxis='frequency',yaxis='amp',ydatacolumn='model')
+        #plotms(vis=calms,field=xcal,correlation='XX,YY', timerange='',antenna='2&3', xaxis='frequency',yaxis='amp',ydatacolumn='model')
     
         
    # else:
@@ -178,7 +176,7 @@ for ii in range(np.size(bpcal)):
                  gaintable = [ktab,gtab_p,gtab_a], gainfield = ['',bpcal[ii],bpcal[ii]],\
                  interp = ['','',''], parang = False,append=append)
 
-# plotms(vis=btab, field=bpcal_id,xaxis='chan',yaxis='amp',antenna='',iteraxis='antenna',coloraxis='corr')
+    # plotms(vis=btab, field=bpcal_id,xaxis='chan',yaxis='amp',antenna='',iteraxis='antenna',coloraxis='corr')
 
 # undo the flags
 
