@@ -15,9 +15,6 @@ it can be done in flocs as ephem is not imported correctly in casa
 
 import numpy as np
 import os
- 
-import sys
-sys.path = ['/homes/abonafede/scripts/'] + sys.path
 import cal_J0408
 
 # Older CASA
