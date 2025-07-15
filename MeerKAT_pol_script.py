@@ -146,6 +146,7 @@ if model_xcal ==True:
       #  sys.exit()
 
 # initial flags on the data
+flagmanager(vis=calms,mode='save',versionname=calms+'_beforeBPcal',comment='save flags before bandpass cal')
 os.sytem(f"tricolour -f {' '.join(fcal_id)} -fs total_power -dc DATA -c {tricolour_strategy}")
 
 # Delay calibration  - residual, most taken out at the obs - few nsec typical 
