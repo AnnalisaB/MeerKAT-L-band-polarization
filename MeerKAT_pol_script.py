@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-##### Full-polarisation calibration script for MeerKAT L band  -written by Annalisa Bonafede - based on Ben Hugo strategy
+##### Full-polarisation calibration script for MeerKAT - tested on L band  -written by Annalisa Bonafede - based on Ben Hugo strategy
 
 '''
 before running this script, all the fields must have X and Y flipped using the script "correct_parang.py" by B Hugo
