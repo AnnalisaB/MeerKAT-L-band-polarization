@@ -48,11 +48,13 @@ bpcal = fcal
 bpcal_id= fcal_id
 gcal  = 'J1337-1257'
 gcal_id='2'
+#polarisation calibrator, if you have more than one scan,pick the best one (higher elevation) - scal_xcal
 xcal  = 'J1331+3030'
 xcal_id='3'
+scan_xcal=''
 leak_cal='J1939-6342'
 leak_cal_id='4'
-scan_xcal=''
+
 
 do_plot=False
 selfcal_xcal=True
