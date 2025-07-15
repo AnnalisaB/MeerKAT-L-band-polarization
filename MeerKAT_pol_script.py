@@ -31,10 +31,9 @@ ref_ant = 'm002'
 gtab_p     = "CASA_Tables/calib.gcal_p"
 ktab     = "CASA_Tables/calib.kcal"
 gtab_a = "CASA_Tables/calib.gcal_a"
-gtab_pol = "CASA_Tables/calib.gcal_1"
 btab     = "CASA_Tables/calib.bandpass"
 ftab     = "CASA_Tables/calib.fluxscale"
-gtab_sec_p = "CASA_Tables/calib.sec.p"
+gtab_sec_p = "CASA_Tables/calib.sec_p"
 Ttab_sec ="CASA_Tables/calib.T"
 gtab_pol_p= "CASA_Tables/calib.gcal_pol_p"
 
