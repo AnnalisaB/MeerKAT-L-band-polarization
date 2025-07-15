@@ -55,6 +55,10 @@ apply_target=True
 if 'J0408-6545' in fcal:
     import cal_J0408 
 
+if not os.path.exists('CASA_Tables'):
+     os.mkdir(CASA_Tables)
+     print("CASA_Tables created. Tables will be saved there.")
+
 # Name your gain tables
 gtab_p     = "CASA_Tables/calib.gcal_p"
 ktab     = "CASA_Tables/calib.kcal"
