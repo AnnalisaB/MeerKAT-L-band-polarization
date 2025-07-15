@@ -5,8 +5,10 @@
 '''
 before running this script, all the fields must have X and Y flipped using the script "correct_parang.py" by B Hugo
 https://github.com/bennahugo/LunaticPolarimetry/blob/master/correct_parang.py
-python correct_parang.py -f f  - -noparang  - -applyantidiag
+python correct_parang.py -f f --noparang --applyantidiag <MSfile>
 the script writes the output in the CORRECTED_DATA column, so the corrected data needs to be split after the correction
+
+before running this script, the MS must be split in a target and a calibration MS
 
 plots are done with shadems https://github.com/ratt-ru/shadeMS
 
