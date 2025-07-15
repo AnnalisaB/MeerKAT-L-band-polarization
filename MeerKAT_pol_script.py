@@ -22,8 +22,9 @@ target='PSZ2G313.33'
 
 calms   = './MS_Files/'+target+'-CorrectPang-cal.MS'
 targetms= './MS_Files/'+target+'-CorrectPang-target.MS'
-tricolour_strategy = 'xxx.yaml'
 ref_ant = 'm002'
+
+tricolour_strategy = 'xxx.yaml'
 
 # Name your gain tables
 gtab_p     = "CASA_Tables/calib.gcal_p"
