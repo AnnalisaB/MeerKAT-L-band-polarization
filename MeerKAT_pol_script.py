@@ -67,7 +67,7 @@ model_xcal=True
 split_xcal=True
 apply_target=True
 
-
+###### END OF INPUTS ######
 ################################################################
 # Change RECEPTOR_ANGLE : DEFAULT IS -90DEG 
 
