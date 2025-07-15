@@ -26,20 +26,6 @@ ref_ant = 'm002'
 
 tricolour_strategy = 'xxx.yaml'
 
-# Name your gain tables
-gtab_p     = "CASA_Tables/calib.gcal_p"
-ktab     = "CASA_Tables/calib.kcal"
-gtab_a = "CASA_Tables/calib.gcal_a"
-btab     = "CASA_Tables/calib.bandpass"
-ftab     = "CASA_Tables/calib.fluxscale"
-gtab_sec_p = "CASA_Tables/calib.sec_p"
-Ttab_sec ="CASA_Tables/calib.T"
-gtab_pol_p= "CASA_Tables/calib.gcal_pol_p"
-
-kxtab    = "CASA_Tables/calib.kcrosscal"
-ptab_xf = "CASA_Tables/calib.xf"
-ptab_df    = "CASA_Tables/calib.df"
-dgen     = "CASA_Tables/calib.leakgen"
 
 #TO DO: find a way to derive these authomatically - maybe look at the VLA pipeline. NOTE: fcal is bpcal and used for leakage pol as well
 
@@ -64,7 +50,24 @@ model_xcal=True
 split_xcal=True
 apply_target=True
 
-###### END OF INPUTS ######
+###### END OF INPUTS (unless you want to change the name ofthe gain tables - see below) ######
+
+# Name your gain tables
+gtab_p     = "CASA_Tables/calib.gcal_p"
+ktab     = "CASA_Tables/calib.kcal"
+gtab_a = "CASA_Tables/calib.gcal_a"
+btab     = "CASA_Tables/calib.bandpass"
+ftab     = "CASA_Tables/calib.fluxscale"
+gtab_sec_p = "CASA_Tables/calib.sec_p"
+Ttab_sec ="CASA_Tables/calib.T"
+gtab_pol_p= "CASA_Tables/calib.gcal_pol_p"
+
+kxtab    = "CASA_Tables/calib.kcrosscal"
+ptab_xf = "CASA_Tables/calib.xf"
+ptab_df    = "CASA_Tables/calib.df"
+dgen     = "CASA_Tables/calib.leakgen"
+
+
 ################################################################
 # Change RECEPTOR_ANGLE : DEFAULT IS -90DEG 
 
