@@ -143,7 +143,7 @@ if model_xcal ==True:
               )
 
         #plots to check
-        #pplotms(vis=calms,field=xcal,correlation='XX,YY', timerange='',antenna='2&3', xaxis='frequency',yaxis='amp',ydatacolumn='model')
+        #plotms(vis=calms,field=xcal,correlation='XX,YY', timerange='',antenna='2&3', xaxis='frequency',yaxis='amp',ydatacolumn='model')
     
         
    # else:
@@ -178,7 +178,7 @@ for ii in range(np.size(bpcal)):
                  gaintable = [ktab,gtab_p,gtab_a], gainfield = ['',bpcal[ii],bpcal[ii]],\
                  interp = ['','',''], parang = False,append=append)
 
-# plotms(vis=btab, field=bpcal_id,xaxis='chan',yaxis='amp',antenna='',iteraxis='antenna',coloraxis='corr')
+    # plotms(vis=btab, field=bpcal_id,xaxis='chan',yaxis='amp',antenna='',iteraxis='antenna',coloraxis='corr')
 
 
 
