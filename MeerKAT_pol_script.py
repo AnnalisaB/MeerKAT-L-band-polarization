@@ -313,5 +313,5 @@ if apply_target==True:
 
 
 # FOR SELFCAL: Either selfcal only for scalar phase ad amplitude from here OR do images and gaincal with parang=True becasue parag correction does not commune with gain amplitude
-# Oarang correction is amplitude correction, so if you selfcalon phase only tou can selfcal diagonal XX and YY separately
+# Remember: Parang correction is amplitude correction, so if you selfcalon phase only tou can selfcal diagonal XX and YY separately
 
