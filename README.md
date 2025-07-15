@@ -10,6 +10,7 @@ Tricolor singularity: `singularity build tricolour.simg docker://quay.io/stimela
 
 #### Before running
 
-Before running 'MeerKAT_pol_script.py' you need to run the script [correct_parang](https://github.com/bennahugo/LunaticPolarimetry/blob/master/correct_parang.py) for each field in your MS file.
-After this, split your MS into two files: <MS>-CorrectPang-cal.MS and <MS>-CorrectPang-target.MS; in the first one put all the calibrators and in the second one only the target field.
-Create a directory 'MS_Files' and move your MS there.
+Before running 'MeerKAT_pol_script.py' you need to:
+  1. run the script [correct_parang](https://github.com/bennahugo/LunaticPolarimetry/blob/master/correct_parang.py) for each field in your MS file;
+  2. split your MS into two files: <MS>-CorrectPang-cal.MS and <MS>-CorrectPang-target.MS; in the first one put all the calibrators and in the second one only the target field;
+  3. create a directory 'MS_Files' and move your MS there.
