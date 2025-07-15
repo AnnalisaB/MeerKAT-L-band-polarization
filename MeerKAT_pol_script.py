@@ -19,12 +19,11 @@ import numpy as np
 import os
 import cal_J0408
 
-# Older CASA
-#from almatasks import *
 target='PSZ2G313.33'
 
 calms   = './MS_Files/'+target+'-CorrectPang-cal.MS'
 targetms= './MS_Files/'+target+'-CorrectPang-target.MS'
+tricolour_strategy = 'xxx.yaml'
 ref_ant = 'm002'
 
 # Name your gain tables
@@ -37,8 +36,6 @@ ftab     = "CASA_Tables/calib.fluxscale"
 gtab_sec_p = "CASA_Tables/calib.sec.p"
 Ttab_sec ="CASA_Tables/calib.T"
 gtab_pol_p= "CASA_Tables/calib.gcal_pol_p"
-
-
 
 kxtab    = "CASA_Tables/calib.kcrosscal"
 ptab_xf = "CASA_Tables/calib.xf"
@@ -150,6 +147,9 @@ if model_xcal ==True:
       #  print("Unknown calibrator, insert model  in the script please ", cal)
       #  sys.exit()
 
+# initial flags on the data
+os.sytem(f"tricolour -fs total_power -dc DATA -c {tricolour_strategy}")
+
 # Delay calibration  - residual, most taken out at the obs - few nsec typical 
 gaincal(vis = calms, caltable = ktab, selectdata = True,\
     solint = "inf", field = bpcal_id, combine = "",uvrange='',\
@@ -165,13 +165,13 @@ for ii in range(np.size(bpcal)):
             refant = ref_ant, gaintype = "G", calmode = "p",uvrange='',\
             gaintable = [ktab], gainfield = [''], interp = [''],parang = False,append=append)
 
-        # amp cal on bandpass calibrator
+    # amp cal on bandpass calibrator
     gaincal(vis = calms, caltable = gtab_a, selectdata = True,\
                 solint = "inf", field = bpcal[ii], combine = "",\
                 refant = ref_ant, gaintype = "G", calmode = "a",uvrange='',\
                 gaintable = [ktab,gtab_p], gainfield = ['',bpcal[ii]], interp = ['',''],parang = False,append=append)
 
-    # ben averages bandpass ober scans - it's mofre stable he says
+    # ben averages bandpass ober scans - it's more stable he says
     bandpass(vis = calms, caltable = btab, selectdata = True,\
                  solint = "inf", field = bpcal[ii], combine = "", uvrange='',\
                  refant = ref_ant, solnorm = False, bandtype = "B",\
@@ -180,8 +180,12 @@ for ii in range(np.size(bpcal)):
 
 # plotms(vis=btab, field=bpcal_id,xaxis='chan',yaxis='amp',antenna='',iteraxis='antenna',coloraxis='corr')
 
+# undo the flags
 
+# applycal
 
+# flag on corrected data
+os.sytem(f"tricolour -fs total_power -dc CORRECTED_DATA -c {tricolour_strategy}")
 
 # Calibrate Df   -real part of reference antenna will be set to 0 -
 polcal(vis = calms, caltable = ptab_df, selectdata = True,\
