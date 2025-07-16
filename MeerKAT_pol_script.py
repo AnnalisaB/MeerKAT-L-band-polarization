@@ -126,9 +126,8 @@ if model_xcal ==True:
     #plotms(vis=calms,field=xcal,correlation='XX,YY', timerange='',antenna='2&3', xaxis='frequency',yaxis='amp',ydatacolumn='model')
     
 
-# initial flags on the data
-# os.sytem(f"tricolour -f {' '.join(fcal_id.split(','))} -fs total_power -dc DATA -c {tricolour_strategy}")
-# TO DO:  initial flags on the data
+# initial flags on the data - save initial flag status before
+# 
 # flagmanager(vis=calms,mode='save',versionname=calms+'_beforeBPcal',comment='save flags before bandpass cal')
 # os.sytem(f"{tricolour_command} -fn {' '.join(fcal_id)} -fs total_power -dc DATA -c {tricolour_strategy}")
 
