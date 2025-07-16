@@ -164,7 +164,7 @@ for ii in range(np.size(bpcal)):
 # undo the flags
 
 # applycal
-applycal(vis=calms,field=[gcal,xcal,fcal],gaintable=[ktab,gtab_p,gtab_a,btab],gainfield = ['', leak_cal, leak_cal,leak_cal],interp=['','nearest','nearest','nearest'])
+# applycal(vis=calms,field=[gcal,xcal,fcal],gaintable=[ktab,gtab_p,gtab_a,btab],gainfield = ['', leak_cal, leak_cal,leak_cal],interp=['','nearest','nearest','nearest'])
 # flag on corrected data
 #os.sytem(f"{tricolour_command} -fn {' '.join(all_cal_ids)} -fs total_power -dc CORRECTED_DATA -c {tricolour_strategy}")
 
