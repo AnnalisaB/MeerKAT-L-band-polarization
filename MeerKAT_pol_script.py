@@ -24,10 +24,8 @@ calms   = './MS_Files/'+target+'-CorrectPang-cal.MS'
 targetms= './MS_Files/'+target+'-CorrectPang-target.MS'
 tricolour_strategy = 'xxx.yaml'
 ref_ant = 'm002'
-
-#TO DO: specify strategy
-# tricolour_strategy = 'xxx.yaml'
-# tricolour_command = 'singularity run tricolour.simg tricolour'
+tricolour_strategy = 'xxx.yaml' # specify strategy for this obs
+tricolour_command = f'singularity run --bind $(pwd) -B {os.getcwd()} ~/storage/tricolour.simg tricolour'
 
 #TO DO: find a way to derive these authomatically - maybe look at the VLA pipeline. NOTE: fcal is bpcal and used for leakage pol as well
 
@@ -156,7 +154,7 @@ if model_xcal ==True:
 # os.sytem(f"tricolour -f {' '.join(fcal_id.split(','))} -fs total_power -dc DATA -c {tricolour_strategy}")
 # TO DO:  initial flags on the data
 # flagmanager(vis=calms,mode='save',versionname=calms+'_beforeBPcal',comment='save flags before bandpass cal')
-# os.sytem(f"{tricolour_command} -f {' '.join(fcal_id)} -fs total_power -dc DATA -c {tricolour_strategy}")
+# os.sytem(f"{tricolour_command} -fn {' '.join(fcal_id)} -fs total_power -dc DATA -c {tricolour_strategy}")
 
 # Delay calibration  - residual, most taken out at the obs - few nsec typical 
 gaincal(vis = calms, caltable = ktab, selectdata = True,\
@@ -192,7 +190,7 @@ for ii in range(np.size(bpcal)):
 # applycal
 applycal(vis=calms,field=[gcal,xcal,fcal],gaintable=[ktab,gtab_p,gtab_a,btab],gainfield = ['', leak_cal, leak_cal,leak_cal],interp=['','nearest','nearest','nearest'])
 # flag on corrected data
-#os.sytem(f"{tricolour_command} -f {' '.join(all_cal_ids)} -fs total_power -dc CORRECTED_DATA -c {tricolour_strategy}")
+#os.sytem(f"{tricolour_command} -fn {' '.join(all_cal_ids)} -fs total_power -dc CORRECTED_DATA -c {tricolour_strategy}")
 
 # Calibrate Df   -real part of reference antenna will be set to 0 -
 polcal(vis = calms, caltable = ptab_df, selectdata = True,\
