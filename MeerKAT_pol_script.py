@@ -133,8 +133,7 @@ if model_xcal ==True:
         polfrac= 0.078
         polangle= -0.16755
         rm=0.
-
-    if xcal =='J1331+3030':
+    elif xcal =='J1331+3030':
         print('setting a model for xcal ',xcal)
         I= 14.7172
         alpha= [-0.4507, -0.1798, 0.0357]
@@ -142,17 +141,18 @@ if model_xcal ==True:
         polfrac= 0.098
         polangle = 0.575959
         rm=0.
-         
+    else:
+        print("Unknown calibrator:", cal)
+        sys.exit()
+
     setjy(vis=calms, field=xcal, standard="manual", \
           fluxdensity=[I,0,0,0], spix=alpha, reffreq=reffreq, polindex=polfrac, polangle=polangle, rotmeas=rm, usescratch=True)
 
-        #plots to check
-        #plotms(vis=calms,field=xcal,correlation='XX,YY', timerange='',antenna='2&3', xaxis='frequency',yaxis='amp',ydatacolumn='model')
+    #plots to check
+    #plotms(vis=calms,field=xcal,correlation='XX,YY', timerange='',antenna='2&3', xaxis='frequency',yaxis='amp',ydatacolumn='model')
     
         
-   # else:
-      #  print("Unknown calibrator:", cal)
-      #  sys.exit()
+
 
 # initial flags on the data
 os.sytem(f"tricolour -f {' '.join(fcal_id.split(','))} -fs total_power -dc DATA -c {tricolour_strategy}")
