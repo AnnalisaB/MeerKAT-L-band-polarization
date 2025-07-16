@@ -16,13 +16,11 @@ it can be done in flocs as ephem is not imported correctly in casa
 
 import numpy as np
 import os, sys
-#import cal_J0408
 
 target='PSZ2G313.33'
 
 calms   = './MS_Files/'+target+'-CorrectPang-cal.MS'
 targetms= './MS_Files/'+target+'-CorrectPang-target.MS'
-tricolour_strategy = 'xxx.yaml'
 ref_ant = 'm002'
 tricolour_strategy = 'xxx.yaml' # specify strategy for this obs
 tricolour_command = f'singularity run --bind $(pwd) -B {os.getcwd()} ~/storage/tricolour.simg tricolour'
@@ -42,6 +40,7 @@ scan_xcal=''
 leak_cal='J1939-6342'
 leak_cal_id='4'
 
+all_cal_ids = [1,2,3,4]
 
 do_plot=False
 selfcal_xcal=True
@@ -74,29 +73,6 @@ ptab_xf = "CASA_Tables/calib.xf"
 ptab_df    = "CASA_Tables/calib.df"
 dgen     = "CASA_Tables/calib.leakgen"
 
-#TO DO: find a way to derive these authomatically - maybe look at the VLA pipeline. NOTE: fcal is bpcal and used for leakage pol as well
-
-fcal  = ['J1939-6342','J0408-6545']
-fcal_id='4,1'
-bpcal = fcal
-bpcal_id= fcal_id
-gcal  = 'J1337-1257'
-gcal_id='2'
-xcal  = 'J1331+3030'
-xcal_id='3'
-leak_cal='J1939-6342'
-leak_cal_id='4'
-scan_xcal=''
-all_cal_ids = [1,2,3,4]
-
-do_plot=False
-selfcal_xcal=True
-model_xcal=True
-
-split_xcal=True
-apply_target=True
-
-###### END OF INPUTS ######
 
 ################################################################
 # Change RECEPTOR_ANGLE : DEFAULT IS -90DEG 
