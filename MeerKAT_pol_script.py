@@ -115,19 +115,14 @@ for cal in fcal:
     print('set jy'+ cal)
     if cal == 'J1939-6342':
         print('setting the model for '+ cal)
-        setjy(vis = calms, field = '"'+cal+'"' , spw = "", selectdata = False, timerange = "", scan = "", \
-            standard = 'Stevens-Reynolds 2016', scalebychan = True, useephemdir = False, usescratch = True)
+        setjy(vis = calms, field = '"'+cal+'"', standard = 'Stevens-Reynolds 2016', usescratch = True)
 
     if cal == 'J0408-6545':
        print('setting the model for '+ cal) 
-       a=-0.9790
-       b=3.3662
-       c=-1.1216
-       d=0.0861
+       a=-0.9790; b=3.3662; c=-1.1216; d=0.0861
        reffreq,fluxdensity,spix0,spix1,spix2 =  cal_J0408.convert_flux_model(np.linspace(0.9,2,200)*1e9,a,b,c,d)
-       setjy(vis= calms, field=cal, spix=[spix0, spix1, spix2, 0], fluxdensity = fluxdensity,  reffreq='%f Hz'%(reffreq),standard='manual',usescratch=True)
-       
-        
+       setjy(vis = calms, field=cal, spix=[spix0, spix1, spix2, 0], fluxdensity = fluxdensity,  reffreq='%f Hz'%(reffreq),standard='manual',usescratch=True)
+
 
 if model_xcal ==True:
     if xcal == 'J0521+1638':
@@ -139,7 +134,6 @@ if model_xcal ==True:
         polangle= -0.16755
         rm=0.
 
-    
     if xcal =='J1331+3030':
         print('setting a model for xcal ',xcal)
         I= 14.7172
@@ -149,31 +143,8 @@ if model_xcal ==True:
         polangle = 0.575959
         rm=0.
          
-
-    setjy(vis=calms,
-             field=xcal,
-             spw='',
-             selectdata=False,
-             timerange="",
-             scan="",
-             intent="",
-             observation="",
-             scalebychan=True,
-             standard="manual",
-             model="",
-             listmodels=False,
-             fluxdensity=[I,0,0,0],
-             spix=alpha,
-             reffreq=reffreq,
-             polindex=polfrac,
-             polangle=polangle,
-             rotmeas=rm,
-             fluxdict={},
-             useephemdir=False,
-             interpolation="nearest",
-             usescratch=True,
-             ismms=False,
-              )
+    setjy(vis=calms, field=xcal, standard="manual", \
+          fluxdensity=[I,0,0,0], spix=alpha, reffreq=reffreq, polindex=polfrac, polangle=polangle, rotmeas=rm, usescratch=True)
 
         #plots to check
         #plotms(vis=calms,field=xcal,correlation='XX,YY', timerange='',antenna='2&3', xaxis='frequency',yaxis='amp',ydatacolumn='model')
