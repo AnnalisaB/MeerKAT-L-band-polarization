@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-##### Full-polarisation calibration script for MeerKAT L band  -written by Annalisa Bonafede - based on Ben Hugo strategy
+##### Full-polarisation calibration script for MeerKAT - tested on L band  -written by Annalisa Bonafede - based on Ben Hugo strategy
 
 '''
 before running this script, all the fields must have X and Y flipped using the script "correct_parang.py" by B Hugo (UHF, L and S band)
@@ -16,15 +16,15 @@ it can be done in flocs as ephem is not imported correctly in casa
 
 import numpy as np
 import os
-import cal_J0408
+#import cal_J0408
 
 target='PSZ2G313.33'
 
 calms   = './MS_Files/'+target+'-CorrectPang-cal.MS'
 targetms= './MS_Files/'+target+'-CorrectPang-target.MS'
-tricolour_strategy = 'xxx.yaml'
 ref_ant = 'm002'
 
+<<<<<<< HEAD
 # Name your gain tables
 gtab_p     = "CASA_Tables/calib.gcal_p"
 ktab     = "CASA_Tables/calib.kcal"
@@ -34,11 +34,11 @@ ftab     = "CASA_Tables/calib.fluxscale"
 gtab_sec_p = "CASA_Tables/calib.sec_p"
 Ttab_sec = "CASA_Tables/calib.T"
 gtab_pol_p= "CASA_Tables/calib.gcal_pol_p"
+=======
+#TO DO: specify strategy
+# tricolour_strategy = 'xxx.yaml'
+>>>>>>> 24343918a53a19c098c1a887ba7112a0fd154780
 
-kxtab    = "CASA_Tables/calib.kcrosscal"
-ptab_xf = "CASA_Tables/calib.xf"
-ptab_df    = "CASA_Tables/calib.df"
-dgen     = "CASA_Tables/calib.leakgen"
 
 #TO DO: find a way to derive these authomatically - maybe look at the VLA pipeline. NOTE: fcal is bpcal and used for leakage pol as well
 
@@ -48,12 +48,18 @@ bpcal = fcal
 bpcal_id= fcal_id
 gcal  = 'J1337-1257'
 gcal_id='2'
+#polarisation calibrator, if you have more than one scan,pick the best one (higher elevation) - scal_xcal
 xcal  = 'J1331+3030'
 xcal_id='3'
+scan_xcal=''
 leak_cal='J1939-6342'
 leak_cal_id='4'
+<<<<<<< HEAD
 scan_xcal=''
 all_cal_ids = [1,2,3,4]
+=======
+
+>>>>>>> 24343918a53a19c098c1a887ba7112a0fd154780
 
 do_plot=False
 selfcal_xcal=True
@@ -62,7 +68,31 @@ model_xcal=True
 split_xcal=True
 apply_target=True
 
-###### END OF INPUTS ######
+###### END OF INPUTS (unless you want to change the name ofthe gain tables - see below) ######
+
+if 'J0408-6545' in fcal:
+    import cal_J0408 
+
+if not os.path.exists('CASA_Tables'):
+     os.mkdir(CASA_Tables)
+     print("CASA_Tables created. Tables will be saved there.")
+
+# Name your gain tables
+gtab_p     = "CASA_Tables/calib.gcal_p"
+ktab     = "CASA_Tables/calib.kcal"
+gtab_a = "CASA_Tables/calib.gcal_a"
+btab     = "CASA_Tables/calib.bandpass"
+ftab     = "CASA_Tables/calib.fluxscale"
+gtab_sec_p = "CASA_Tables/calib.sec_p"
+Ttab_sec ="CASA_Tables/calib.T"
+gtab_pol_p= "CASA_Tables/calib.gcal_pol_p"
+
+kxtab    = "CASA_Tables/calib.kcrosscal"
+ptab_xf = "CASA_Tables/calib.xf"
+ptab_df    = "CASA_Tables/calib.df"
+dgen     = "CASA_Tables/calib.leakgen"
+
+
 ################################################################
 # Change RECEPTOR_ANGLE : DEFAULT IS -90DEG 
 
@@ -146,8 +176,14 @@ if model_xcal ==True:
       #  print("Unknown calibrator:", cal)
       #  sys.exit()
 
+<<<<<<< HEAD
 # initial flags on the data
 os.sytem(f"tricolour -f {' '.join(fcal_id.split(','))} -fs total_power -dc DATA -c {tricolour_strategy}")
+=======
+# TO DO:  initial flags on the data
+# flagmanager(vis=calms,mode='save',versionname=calms+'_beforeBPcal',comment='save flags before bandpass cal')
+# os.sytem(f"tricolour -f {' '.join(fcal_id)} -fs total_power -dc DATA -c {tricolour_strategy}")
+>>>>>>> 24343918a53a19c098c1a887ba7112a0fd154780
 
 # Delay calibration  - residual, most taken out at the obs - few nsec typical 
 gaincal(vis = calms, caltable = ktab, selectdata = True,\
@@ -182,9 +218,15 @@ for ii in range(np.size(bpcal)):
 # undo the flags
 
 # applycal
+<<<<<<< HEAD
 applycal(vis=calms,field=[gcal,xcal,fcal],gaintable=[ktab,gtab_p,gtab_a,btab],gainfield = ['', leak_cal, leak_cal,leak_cal],interp=['','nearest','nearest','nearest'])
 # flag on corrected data
 os.sytem(f"tricolour -f {' '.join(all_cal_ids)} -fs total_power -dc CORRECTED_DATA -c {tricolour_strategy}")
+=======
+
+# TO DO flag on corrected data
+# os.sytem(f"tricolour -fs total_power -dc CORRECTED_DATA -c {tricolour_strategy}")
+>>>>>>> 24343918a53a19c098c1a887ba7112a0fd154780
 
 # Calibrate Df   -real part of reference antenna will be set to 0 -
 polcal(vis = calms, caltable = ptab_df, selectdata = True,\
