@@ -3,9 +3,9 @@
 ##### Full-polarisation calibration script for MeerKAT L band  -written by Annalisa Bonafede - based on Ben Hugo strategy
 
 '''
-before running this script, all the fields must have X and Y flipped using the script "correct_parang.py" by B Hugo
+before running this script, all the fields must have X and Y flipped using the script "correct_parang.py" by B Hugo (UHF, L and S band)
 https://github.com/bennahugo/LunaticPolarimetry/blob/master/correct_parang.py
-python correct_parang.py -f <field> --noparang --applyantidiag <MSfile>
+python3 correct_parang.py -f <field> --noparang --applyantidiag <MSfile>
 the correct_parang.py script must be run on each field separately
 the script writes the output in the CORRECTED_DATA column, so the corrected data needs to be split after the correction
 
@@ -32,7 +32,7 @@ gtab_a = "CASA_Tables/calib.gcal_a"
 btab     = "CASA_Tables/calib.bandpass"
 ftab     = "CASA_Tables/calib.fluxscale"
 gtab_sec_p = "CASA_Tables/calib.sec_p"
-Ttab_sec ="CASA_Tables/calib.T"
+Ttab_sec = "CASA_Tables/calib.T"
 gtab_pol_p= "CASA_Tables/calib.gcal_pol_p"
 
 kxtab    = "CASA_Tables/calib.kcrosscal"
@@ -53,6 +53,7 @@ xcal_id='3'
 leak_cal='J1939-6342'
 leak_cal_id='4'
 scan_xcal=''
+all_cal_ids = [1,2,3,4]
 
 do_plot=False
 selfcal_xcal=True
@@ -129,7 +130,7 @@ if model_xcal ==True:
              reffreq=reffreq,
              polindex=polfrac,
              polangle=polangle,
-             rotmeas=0.,
+             rotmeas=rm,
              fluxdict={},
              useephemdir=False,
              interpolation="nearest",
@@ -142,15 +143,15 @@ if model_xcal ==True:
     
         
    # else:
-      #  print("Unknown calibrator, insert model  in the script please ", cal)
+      #  print("Unknown calibrator:", cal)
       #  sys.exit()
 
 # initial flags on the data
-os.sytem(f"tricolour -f {' '.join(fcal_id)} -fs total_power -dc DATA -c {tricolour_strategy}")
+os.sytem(f"tricolour -f {' '.join(fcal_id.split(','))} -fs total_power -dc DATA -c {tricolour_strategy}")
 
 # Delay calibration  - residual, most taken out at the obs - few nsec typical 
 gaincal(vis = calms, caltable = ktab, selectdata = True,\
-    solint = "inf", field = bpcal_id, combine = "",uvrange='',\
+    solint = "inf", field = bpcal, combine = "",uvrange='',\
     refant = ref_ant, solnorm = False, gaintype = "K",\
     minsnr=5,parang = False)
 
@@ -176,14 +177,14 @@ for ii in range(np.size(bpcal)):
                  gaintable = [ktab,gtab_p,gtab_a], gainfield = ['',bpcal[ii],bpcal[ii]],\
                  interp = ['','',''], parang = False,append=append)
 
-# plotms(vis=btab, field=bpcal_id,xaxis='chan',yaxis='amp',antenna='',iteraxis='antenna',coloraxis='corr')
+# plotms(vis=btab, field=bpcal,xaxis='chan',yaxis='amp',antenna='',iteraxis='antenna',coloraxis='corr')
 
 # undo the flags
 
 # applycal
-
+applycal(vis=calms,field=[gcal,xcal,fcal],gaintable=[ktab,gtab_p,gtab_a,btab],gainfield = ['', leak_cal, leak_cal,leak_cal],interp=['','nearest','nearest','nearest'])
 # flag on corrected data
-os.sytem(f"tricolour -fs total_power -dc CORRECTED_DATA -c {tricolour_strategy}")
+os.sytem(f"tricolour -f {' '.join(all_cal_ids)} -fs total_power -dc CORRECTED_DATA -c {tricolour_strategy}")
 
 # Calibrate Df   -real part of reference antenna will be set to 0 -
 polcal(vis = calms, caltable = ptab_df, selectdata = True,\
@@ -240,7 +241,7 @@ if do_plot ==True:
 #apply calibration up to  now to xcal: XY and YX will vary with time due to pang, CHECK that power of XY,YX applitude is not close to 0 (not power to cailbrate
 #plotms(vis='moon_uhf_calibrators.ms', xaxis='time', yaxis='amplitude', xdatacolumn='corrected', ydatacolumn='corrected', correlation='XY,YX', coloraxis='corr', uvrange=">1m", avgchannel='9999999',  field='J1331+3030')
 
-applycal(vis=calms,field=xcal_id,gaintable=[ktab,gtab_p,gtab_a,btab,Ttab_sec,ptab_df])
+applycal(vis=calms,field=xcal,gaintable=[ktab,gtab_p,gtab_a,btab,Ttab_sec,ptab_df])
 if do_plot ==True:
      os.system("shadems --xaxis CORRECTED_DATA:phase  --yaxis CORRECTED_DATA:amp --field "+ xcal_id+" --corr XX,YY --png './PLOTS/Xf-precalXf-XX-YY.png' "+calms)
      os.system("shadems --xaxis TIME  --yaxis CORRECTED_DATA:amp --field "+ xcal_id+" --corr XY,YX --png './PLOTS/Xf-precalXf-XY-YX.png' "+calms)
