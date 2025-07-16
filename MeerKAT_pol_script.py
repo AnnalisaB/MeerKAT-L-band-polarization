@@ -15,7 +15,7 @@ it can be done in flocs as ephem is not imported correctly in casa
 '''
 
 import numpy as np
-import os
+import os, sys
 #import cal_J0408
 
 target='PSZ2G313.33'
@@ -155,16 +155,15 @@ if model_xcal ==True:
 
 
 # initial flags on the data
-os.sytem(f"tricolour -f {' '.join(fcal_id.split(','))} -fs total_power -dc DATA -c {tricolour_strategy}")
+# os.sytem(f"tricolour -f {' '.join(fcal_id.split(','))} -fs total_power -dc DATA -c {tricolour_strategy}")
 # TO DO:  initial flags on the data
 # flagmanager(vis=calms,mode='save',versionname=calms+'_beforeBPcal',comment='save flags before bandpass cal')
 # os.sytem(f"tricolour -f {' '.join(fcal_id)} -fs total_power -dc DATA -c {tricolour_strategy}")
 
 # Delay calibration  - residual, most taken out at the obs - few nsec typical 
 gaincal(vis = calms, caltable = ktab, selectdata = True,\
-    solint = "inf", field = bpcal, combine = "",uvrange='',\
-    refant = ref_ant, solnorm = False, gaintype = "K",\
-    minsnr=5,parang = False)
+    solint = "inf", field = bpcal, refant = ref_ant, solnorm = False, gaintype = "K",\
+    minsnr = 5, parang = False)
 
 for ii in range(np.size(bpcal)):
     if ii ==0: append=False
