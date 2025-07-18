@@ -132,7 +132,7 @@ if do_flags==True:
 
 if do_flags==True:
     range_cal=2
-elif range_cal=1
+else: range_cal=1
 
 for cal in range(range_cal):
 
