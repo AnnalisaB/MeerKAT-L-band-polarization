@@ -45,6 +45,7 @@ leak_cal='J1939-6342'
 leak_cal_id='4'
 
 do_plot=False
+do_flags=True
 selfcal_xcal=True
 model_xcal=True
 
