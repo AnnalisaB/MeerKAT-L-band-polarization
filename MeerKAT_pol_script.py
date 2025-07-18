@@ -22,8 +22,12 @@ target='PSZ2G313.33'
 calms   = './MS_Files/'+target+'-CorrectPang-cal.MS'
 targetms= './MS_Files/'+target+'-CorrectPang-target.MS'
 ref_ant = 'm002'
-tricolour_strategy = 'xxx.yaml' # specify strategy for this obs
-tricolour_command = f'singularity run --bind $(pwd) -B {os.getcwd()} ~/storage/tricolour.simg tricolour'
+
+#To FLAG: specify flocs singularity (or anthing with aoflagger), the aoflagger strategy and the dir you want to bind
+flocs_simg='/iranet/groups/lofar/containers/flocs-latest.simg'
+aoflagger_strategy='/'
+binding_dir=''
+
 
 #TO DO: find a way to derive these authomatically - maybe look at the VLA pipeline. NOTE: fcal is bpcal and used for leakage pol as well
 
@@ -39,8 +43,6 @@ xcal_id='3'
 scan_xcal=''
 leak_cal='J1939-6342'
 leak_cal_id='4'
-
-all_cal_ids = [1,2,3,4]
 
 do_plot=False
 selfcal_xcal=True
@@ -121,51 +123,60 @@ if model_xcal ==True:
 
     setjy(vis=calms, field=xcal, standard="manual", \
           fluxdensity=[I,0,0,0], spix=alpha, reffreq=reffreq, polindex=polfrac, polangle=polangle, rotmeas=rm, usescratch=True)
+ 
 
-    #plots to check
-    #plotms(vis=calms,field=xcal,correlation='XX,YY', timerange='',antenna='2&3', xaxis='frequency',yaxis='amp',ydatacolumn='model')
+if do_flags==True:
+    # initial flags on the data - save initial flag status before
+    flagmanager(vis=calms,mode='save',versionname='BeforeBPcal',comment='save flags before bandpass cal')
+    os.system(f"singularity run -B {binding_dir} {flocs_simg} aoflagger -strategy {aoflagger_strategy} -fields {bpcal} {calms}")
+
+if do_flags==True:
+    range_cal=2
+elif range_cal=1
+
+for cal in range(range_cal):
+
+    # Delay calibration  - residual, most taken out at the obs - few nsec typical 
+    gaincal(vis = calms, caltable = ktab, selectdata = True,\
+            solint = "inf", field = bpcal_id, combine = "",uvrange='',\
+            refant = ref_ant, solnorm = False, gaintype = "K",\
+            minsnr=5,parang = False)
     
+    for ii in range(np.size(bpcal)):
+        if ii ==0: append=False
+        if ii > 0: append=True
+              # phase cal on bandpass calibrator  - phse will be twhrown away - Ben uses infinite time to wash out RFI
+              gaincal(vis = calms, caltable = gtab_p, selectdata = True,\
+                      solint = "60s", field = bpcal[ii], combine = "",refantmode='strict',\
+                      refant = ref_ant, gaintype = "G", calmode = "p",uvrange='',\
+                      gaintable = [ktab], gainfield = [''], interp = [''],parang = False,append=append)
 
-# initial flags on the data - save initial flag status before
-# 
-# flagmanager(vis=calms,mode='save',versionname=calms+'_beforeBPcal',comment='save flags before bandpass cal')
-# os.sytem(f"{tricolour_command} -fn {' '.join(fcal_id)} -fs total_power -dc DATA -c {tricolour_strategy}")
+              # amp cal on bandpass calibrator
+              gaincal(vis = calms, caltable = gtab_a, selectdata = True,\
+                      solint = "inf", field = bpcal[ii], combine = "",\
+                      refant = ref_ant, gaintype = "G", calmode = "a",uvrange='',\
+                      gaintable = [ktab,gtab_p], gainfield = ['',bpcal[ii]], interp = ['',''],parang = False,append=append)
 
-# Delay calibration  - residual, most taken out at the obs - few nsec typical 
-gaincal(vis = calms, caltable = ktab, selectdata = True,\
-    solint = "inf", field = bpcal, refant = ref_ant, solnorm = False, gaintype = "K",\
-    minsnr = 5, parang = False)
+              # ben averages bandpass ober scans - it's more stable he says
+              bandpass(vis = calms, caltable = btab, selectdata = True,\
+                       solint = "inf", field = bpcal[ii], combine = "", uvrange='',\
+                       refant = ref_ant, solnorm = False, bandtype = "B",\
+                       gaintable = [ktab,gtab_p,gtab_a], gainfield = ['',bpcal[ii],bpcal[ii]],\
+                       interp = ['','',''], parang = False,append=append)
 
-for ii in range(np.size(bpcal)):
-    if ii ==0: append=False
-    if ii > 0: append=True
-    # phase cal on bandpass calibrator  - phse will be twhrown away - Ben uses infinite time to wash out RFI
-    gaincal(vis = calms, caltable = gtab_p, selectdata = True,\
-            solint = "60s", field = bpcal[ii], combine = "",refantmode='strict',\
-            refant = ref_ant, gaintype = "G", calmode = "p",uvrange='',\
-            gaintable = [ktab], gainfield = [''], interp = [''],parang = False,append=append)
+              if (cal==0 and do_flags==True):
+                  #plotms(vis=btab, field=bpcal_id,xaxis='chan',yaxis='amp',antenna='',coloraxis='antenna1',plotfile='first_bandpass.png',showgui=False)
+                  # undo the flags
+                  flagmanager(vis=calms,mode='restore',versionname='BeforeBPcal')
+                  # applycal
+                  applycal(vis=calms,field=bpcal_id+','+xcal_id+','+gcal_id, gaintable=[ktab,gtab_p,gtab_a,btab])
+                  # flag on corrected data
+                  #os.system(f"{tricolour_command} {calms} -fs total_power -dc CORRECTED_DATA -c {tricolour_strategy_secondpass}")
+                  os.system(f"singularity run -B {binding_dir} {flocs_simg} aoflagger -strategy {aoflagger_strategy} -column CORRECTED_DATA {calms}")
+                  #remove tables 
+                  os.system(f'rm -rf  {gtab_p} {gtab_a} {btab} {ktab}')
 
-    # amp cal on bandpass calibrator
-    gaincal(vis = calms, caltable = gtab_a, selectdata = True,\
-                solint = "inf", field = bpcal[ii], combine = "",\
-                refant = ref_ant, gaintype = "G", calmode = "a",uvrange='',\
-                gaintable = [ktab,gtab_p], gainfield = ['',bpcal[ii]], interp = ['',''],parang = False,append=append)
 
-    # ben averages bandpass ober scans - it's more stable he says
-    bandpass(vis = calms, caltable = btab, selectdata = True,\
-                 solint = "inf", field = bpcal[ii], combine = "", uvrange='',\
-                 refant = ref_ant, solnorm = False, bandtype = "B",\
-                 gaintable = [ktab,gtab_p,gtab_a], gainfield = ['',bpcal[ii],bpcal[ii]],\
-                 interp = ['','',''], parang = False,append=append)
-
-# plotms(vis=btab, field=bpcal,xaxis='chan',yaxis='amp',antenna='',iteraxis='antenna',coloraxis='corr')
-
-# undo the flags
-
-# applycal
-# applycal(vis=calms,field=[gcal,xcal,fcal],gaintable=[ktab,gtab_p,gtab_a,btab],gainfield = ['', leak_cal, leak_cal,leak_cal],interp=['','nearest','nearest','nearest'])
-# flag on corrected data
-#os.sytem(f"{tricolour_command} -fn {' '.join(all_cal_ids)} -fs total_power -dc CORRECTED_DATA -c {tricolour_strategy}")
 
 # Calibrate Df   -real part of reference antenna will be set to 0 -
 polcal(vis = calms, caltable = ptab_df, selectdata = True,\
