@@ -2,10 +2,12 @@
 
 Pipeline:
 https://github.com/AnnalisaB/MeerKAT-polarization/blob/main/MeerKAT_pol_script.py
+At the moment, it is a CASA script, to be run inside CASA. If you want to flag, a singularity with AoFlagger installed is also needed
+(LOFAR flocs at the moment)
 
+# The following were used before but are not needed anymore
 Pipeline singularity: `singularity build MeerKATpol.simg docker://tpasini/pol_meerkat:latest`
-
-Tricolor singularity: `singularity build tricolour.simg docker://quay.io/stimela2/tricolour`
+Tricolor singularity: `singularity build tricolour.simg docker://quay.io/stimela2/tricolour` 
 
 
 #### Before running
