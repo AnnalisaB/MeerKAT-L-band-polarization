@@ -15,7 +15,7 @@ it can be done in flocs as ephem is not imported correctly in casa
 '''
 
 import numpy as np
-import os, sys
+import os, sys, logging
 
 target='PSZ2G313.33'
 
@@ -66,9 +66,9 @@ logging.basicConfig(filename=log_file,
         level=log_level)
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 logger = logging.getLogger(__name__)
-old_log_filename = casa.casalog.logfile()
+old_log_filename = casalog.logfile()
 # Point the casa logsink to the new file
-casa.casalog.setlogfile(filename=casa_log)
+casalog.setlogfile(filename=casa_log)
 # Delete the old file
 os.remove(old_log_filename)
 # remove annoying warnings
@@ -168,26 +168,26 @@ for cal in range(range_cal):
     for ii in range(np.size(bpcal)):
         if ii ==0: append=False
         if ii > 0: append=True
-              # phase cal on bandpass calibrator  - phse will be twhrown away - Ben uses infinite time to wash out RFI
-              gaincal(vis = calms, caltable = gtab_p, selectdata = True,\
+        # phase cal on bandpass calibrator  - phse will be twhrown away - Ben uses infinite time to wash out RFI
+        gaincal(vis = calms, caltable = gtab_p, selectdata = True,\
                       solint = "60s", field = bpcal[ii], combine = "",refantmode='strict',\
                       refant = ref_ant, gaintype = "G", calmode = "p",uvrange='',\
                       gaintable = [ktab], gainfield = [''], interp = [''],parang = False,append=append)
 
-              # amp cal on bandpass calibrator
-              gaincal(vis = calms, caltable = gtab_a, selectdata = True,\
+        # amp cal on bandpass calibrator
+        gaincal(vis = calms, caltable = gtab_a, selectdata = True,\
                       solint = "inf", field = bpcal[ii], combine = "",\
                       refant = ref_ant, gaintype = "G", calmode = "a",uvrange='',\
                       gaintable = [ktab,gtab_p], gainfield = ['',bpcal[ii]], interp = ['',''],parang = False,append=append)
 
-              # ben averages bandpass ober scans - it's more stable he says
-              bandpass(vis = calms, caltable = btab, selectdata = True,\
+        # ben averages bandpass ober scans - it's more stable he says
+        bandpass(vis = calms, caltable = btab, selectdata = True,\
                        solint = "inf", field = bpcal[ii], combine = "", uvrange='',\
                        refant = ref_ant, solnorm = False, bandtype = "B",\
                        gaintable = [ktab,gtab_p,gtab_a], gainfield = ['',bpcal[ii],bpcal[ii]],\
                        interp = ['','',''], parang = False,append=append)
 
-              if (cal==0 and do_flags==True):
+        if (cal==0 and do_flags==True):
                   #plotms(vis=btab, field=bpcal_id,xaxis='chan',yaxis='amp',antenna='',coloraxis='antenna1',plotfile='first_bandpass.png',showgui=False)
                   # undo the flags
                   flagmanager(vis=calms,mode='restore',versionname='BeforeBPcal')
