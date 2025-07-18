@@ -53,7 +53,7 @@ apply_target=True
 
 ###### END OF INPUTS (unless you want to change the name ofthe gain tables - see below) ######
 
-#############################
+##############################
 ### Logs Setting up and functions
 log_file = os.path.join(invis + '.log')
 casa_log = os.path.join(invis + '_casa.log')
@@ -70,6 +70,8 @@ old_log_filename = casa.casalog.logfile()
 casa.casalog.setlogfile(filename=casa_log)
 # Delete the old file
 os.remove(old_log_filename)
+# remove annoying warnings
+logging.getLogger("asyncio").setLevel(logging.WARNING)
 
 
 ############################# Set model with SetJy
