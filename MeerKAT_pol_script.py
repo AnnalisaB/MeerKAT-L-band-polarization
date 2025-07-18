@@ -111,13 +111,13 @@ tb.close()
 clearcal(vis=calms)
 
 for cal in fcal:
-    logger.info('set jy'+ cal)
+    logger.info(f'set jy {cal}')
     if cal == 'J1939-6342':
         logger.info('setting the model for '+ cal)
         setjy(vis = calms, field = '"'+cal+'"', standard = 'Stevens-Reynolds 2016', usescratch = True)
 
     if cal == 'J0408-6545':
-       logger.info('setting the model for '+ cal) 
+       logger.info(f'setting the model for {cal}') 
        a=-0.9790; b=3.3662; c=-1.1216; d=0.0861
        reffreq,fluxdensity,spix0,spix1,spix2 =  cal_J0408.convert_flux_model(np.linspace(0.9,2,200)*1e9,a,b,c,d)
        setjy(vis = calms, field=cal, spix=[spix0, spix1, spix2, 0], fluxdensity = fluxdensity,  reffreq='%f Hz'%(reffreq),standard='manual',usescratch=True)
@@ -125,7 +125,7 @@ for cal in fcal:
 
 if model_xcal ==True:
     if xcal == 'J0521+1638':
-        logger.info('setting a model for the xcal ',xcal)
+        logger.info(f'setting a model for the xcal {xcal}')
         I= 8.33843
         alpha= [-0.4981, -0.1552, -0.0102, 0.0223]
         reffreq= '1.47GHz'
@@ -133,7 +133,7 @@ if model_xcal ==True:
         polangle= -0.16755
         rm=0.
     elif xcal =='J1331+3030':
-        logger.info('setting a model for xcal ',xcal)
+        logger.info(f'setting a model for xcal {xcal}')
         I= 14.7172
         alpha= [-0.4507, -0.1798, 0.0357]
         reffreq= '1.47GHz'
@@ -141,7 +141,7 @@ if model_xcal ==True:
         polangle = 0.575959
         rm=0.
     else:
-        logger.info("Unknown calibrator:", cal)
+        logger.info(f'Unknown calibrator: {cal}')
         sys.exit()
 
     setjy(vis=calms, field=xcal, standard="manual", \
