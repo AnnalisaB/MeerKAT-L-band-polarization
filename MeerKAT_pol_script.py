@@ -53,12 +53,32 @@ apply_target=True
 
 ###### END OF INPUTS (unless you want to change the name ofthe gain tables - see below) ######
 
+#############################
+### Logs Setting up and functions
+log_file = os.path.join(invis + '.log')
+casa_log = os.path.join(invis + '_casa.log')
+
+log_level = logging.DEBUG
+logging.basicConfig(filename=log_file,
+        format='%(asctime)s %(name)s:%(funcName)s\t%(message)s',
+        datefmt='%Y-%m-%d %H:%M', filemode='w',
+        level=log_level)
+logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
+logger = logging.getLogger(__name__)
+old_log_filename = casa.casalog.logfile()
+# Point the casa logsink to the new file
+casa.casalog.setlogfile(filename=casa_log)
+# Delete the old file
+os.remove(old_log_filename)
+
+
+############################# Set model with SetJy
 if 'J0408-6545' in fcal:
     import cal_J0408 
 
 if not os.path.exists("CASA_Tables"):
      os.mkdir("CASA_Tables")
-     print("Directory CASA_Tables created. Tables will be saved there.")
+     logger.info("Directory CASA_Tables created. Tables will be saved there.")
 
 # Name your gain tables
 gtab_p     = "CASA_Tables/calib.gcal_p"
@@ -88,13 +108,13 @@ tb.close()
 clearcal(vis=calms)
 
 for cal in fcal:
-    print('set jy'+ cal)
+    logger.info('set jy'+ cal)
     if cal == 'J1939-6342':
-        print('setting the model for '+ cal)
+        logger.info('setting the model for '+ cal)
         setjy(vis = calms, field = '"'+cal+'"', standard = 'Stevens-Reynolds 2016', usescratch = True)
 
     if cal == 'J0408-6545':
-       print('setting the model for '+ cal) 
+       logger.info('setting the model for '+ cal) 
        a=-0.9790; b=3.3662; c=-1.1216; d=0.0861
        reffreq,fluxdensity,spix0,spix1,spix2 =  cal_J0408.convert_flux_model(np.linspace(0.9,2,200)*1e9,a,b,c,d)
        setjy(vis = calms, field=cal, spix=[spix0, spix1, spix2, 0], fluxdensity = fluxdensity,  reffreq='%f Hz'%(reffreq),standard='manual',usescratch=True)
@@ -102,7 +122,7 @@ for cal in fcal:
 
 if model_xcal ==True:
     if xcal == 'J0521+1638':
-        print('setting a model for the xcal ',xcal)
+        logger.info('setting a model for the xcal ',xcal)
         I= 8.33843
         alpha= [-0.4981, -0.1552, -0.0102, 0.0223]
         reffreq= '1.47GHz'
@@ -110,7 +130,7 @@ if model_xcal ==True:
         polangle= -0.16755
         rm=0.
     elif xcal =='J1331+3030':
-        print('setting a model for xcal ',xcal)
+        logger.info('setting a model for xcal ',xcal)
         I= 14.7172
         alpha= [-0.4507, -0.1798, 0.0357]
         reffreq= '1.47GHz'
@@ -118,7 +138,7 @@ if model_xcal ==True:
         polangle = 0.575959
         rm=0.
     else:
-        print("Unknown calibrator:", cal)
+        logger.info("Unknown calibrator:", cal)
         sys.exit()
 
     setjy(vis=calms, field=xcal, standard="manual", \
